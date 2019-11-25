@@ -64,3 +64,28 @@ export async function deleteTask(req, res) {
         res.status(500).json({ message: 'Error al eliminar la tarea' });
     }
 }
+
+export async function updateTask(req, res) {
+    try{
+        const { id } = req.params;
+        const { name, deliverydate } = req.body;
+        const task = await Task.findOne({
+            where : {
+                task_id : id
+            }
+        });
+        if(task) {
+            const result = await task.update({
+                name,
+                deliverydate
+            });
+            res.status(200).json({
+                message : 'La tarea se ha actualizado satisfactoriamente.',
+                result
+            });
+        }
+    }catch(e) {
+        console.log(e);
+        res.status(500).json({message : 'Error actualizando la tarea,'});
+    }
+}
